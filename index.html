@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cupcake &amp; Café Menú</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap">
+<style>
+/* Layout: una sola columna tipo teléfono (máx. 520px). Identidad de la marca: crema degradado a blanco, cacao y glaseado rosa.
+   Tema único claro, a pedido del cliente. */
+:root {
+  --cream: #FBEBD3;
+  --cream-2: #FFF7EC;
+  --white: #FFFFFF;
+  --cocoa: #4A2C22;        /* texto principal y botones */
+  --cocoa-soft: #7A5A4C;   /* texto secundario */
+  --line: #EEDCC4;
+  --frosting: #E7849C;     /* glaseado: ofertas y detalles */
+  --frosting-ink: #4A1626;
+  --sold: #9A8F88;
+  --shadow: 0 1px 2px rgba(74, 44, 34, .06), 0 10px 26px rgba(74, 44, 34, .08);
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--white); }
+body {
+  background: linear-gradient(180deg, var(--cream) 0px, var(--cream-2) 420px, var(--white) 900px) no-repeat, var(--white);
+  color: var(--cocoa);
+  font-family: var(--font-body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 110px;
+  min-height: 100%;
+}
+.wrap { max-width: 520px; margin: 0 auto; }
+.num { font-variant-numeric: tabular-nums; }
+button { font: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--frosting); outline-offset: 2px; }
+
+/* Encabezado */
+.top { padding-block: 26px 14px; display: grid; gap: 12px; text-align: center; justify-items: center; }
+.logo { width: 76px; height: 76px; border-radius: 50%; background: var(--white); box-shadow: var(--shadow); display: grid; place-items: center; }
+h1 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 1; letter-spacing: -.01em; }
+h1 em { font-style: normal; color: var(--frosting); }
+.sub { margin: 0; color: var(--cocoa-soft); font-size: 14px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.mesa { display: inline-flex; align-items: center; padding: 7px 14px; border-radius: 999px; background: var(--cocoa); color: var(--cream-2); font-weight: 800; font-size: 14px; }
+.tasa { display: inline-flex; align-items: center; padding: 7px 14px; border-radius: 999px; background: var(--white); border: 1px solid var(--line); font-size: 13px; color: var(--cocoa-soft); }
+.tasa strong { color: var(--cocoa); margin-left: 4px; }
+
+/* Ofertas */
+.section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 20px 0 10px; }
+h2 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 22px; }
+.hint { color: var(--cocoa-soft); font-size: 12.5px; }
+.ofertas { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2px 4px 10px; margin-inline: -4px; }
+.oferta {
+  flex: 0 0 82%; max-width: 360px; scroll-snap-align: start; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--white) 0%, var(--cream) 100%);
+  border: 1px solid var(--line); border-radius: 20px; padding: 16px; display: grid; gap: 8px; box-shadow: var(--shadow);
+}
+.oferta::after { content: ""; position: absolute; right: -36px; top: -36px; width: 110px; height: 110px; border-radius: 50%; background: var(--frosting); opacity: .16; }
+.tag { justify-self: start; background: var(--frosting); color: var(--frosting-ink); font-weight: 800; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; padding: 4px 9px; border-radius: 6px; }
+.oferta h3 { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: 20px; line-height: 1.15; }
+.oferta p { margin: 0; font-size: 13.5px; color: var(--cocoa-soft); max-width: 30ch; }
+.oferta-foot { display: flex; align-items: end; justify-content: space-between; gap: 10px; margin-top: 4px; position: relative; z-index: 1; }
+.antes { text-decoration: line-through; color: var(--cocoa-soft); font-size: 13px; }
+.precio-grande { font-family: var(--font-display); font-weight: 800; font-size: 26px; line-height: 1; }
+.bs { font-size: 12.5px; color: var(--cocoa-soft); }
+
+/* Pestañas */
+.tabs {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: rgba(255, 247, 236, .96);
+  backdrop-filter: blur(6px); display: flex; gap: 8px; overflow-x: auto; padding-block: 12px; margin-top: 6px; border-bottom: 1px solid var(--line);
+}
+.tab { border: 1px solid var(--line); background: var(--white); color: var(--cocoa); padding: 9px 15px; border-radius: 999px; font-weight: 700; font-size: 14px; white-space: nowrap; min-height: 40px; }
+.tab[aria-current="true"] { background: var(--cocoa); color: var(--cream-2); border-color: var(--cocoa); }
+
+/* Productos */
+.cat { scroll-margin-top: 80px; }
+.cat h2 { margin: 24px 0 4px; }
+.cat .cat-desc { margin: 0 0 4px; color: var(--cocoa-soft); font-size: 13.5px; }
+.plato { display: grid; grid-template-columns: 1fr auto; gap: 3px 14px; padding: 14px 0; border-bottom: 1px dashed var(--line); }
+.plato:last-child { border-bottom: 0; }
+.plato h3 { margin: 0; font-size: 16px; font-weight: 800; }
+.plato p { margin: 0; color: var(--cocoa-soft); font-size: 13.5px; grid-column: 1; }
+.badge { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 800; color: #B04A64; letter-spacing: .04em; text-transform: uppercase; vertical-align: 2px; }
+.precio { grid-column: 1; display: flex; gap: 10px; align-items: baseline; margin-top: 2px; }
+.precio b { font-size: 16px; }
+.precio span { color: var(--cocoa-soft); font-size: 13px; }
+.ctrl { grid-column: 2; grid-row: 1 / span 3; align-self: center; }
+.plato.agotado h3, .plato.agotado .precio { color: var(--sold); }
+.add { min-width: 44px; min-height: 44px; border-radius: 14px; border: 0; background: var(--cocoa); color: var(--cream-2); font-weight: 800; font-size: 14px; padding: 0 15px; }
+.add:disabled { background: transparent; border: 1px solid var(--line); color: var(--sold); cursor: not-allowed; }
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 14px; background: var(--white); }
+.stepper button { width: 40px; height: 42px; border: 0; background: transparent; color: var(--cocoa); font-size: 20px; font-weight: 700; }
+.stepper output { min-width: 22px; text-align: center; font-weight: 800; }
+
+/* Barra de pedido */
+.barra {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: linear-gradient(to top, var(--white) 70%, rgba(255, 255, 255, 0));
+}
+.barra button { width: 100%; max-width: 520px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; border: 0; border-radius: 18px; padding: 14px 18px; min-height: 56px; background: var(--cocoa); color: var(--cream-2); font-weight: 800; font-size: 16px; box-shadow: var(--shadow); }
+.barra .count { background: var(--frosting); color: var(--frosting-ink); border-radius: 999px; padding: 2px 9px; font-size: 13px; margin-right: 8px; }
+
+/* Hoja del pedido */
+.sheet-bg { position: fixed; inset: 0; background: rgba(40, 22, 16, .45); z-index: 20; display: flex; align-items: flex-end; justify-content: center; }
+.sheet {
+  width: 100%; max-width: 560px; max-height: 88vh; overflow: auto; background: var(--white); color: var(--cocoa); border-radius: 22px 22px 0 0;
+  padding: 18px max(18px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px));
+  display: grid; gap: 12px;
+}
+.sheet-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.close { border: 1px solid var(--line); background: transparent; color: var(--cocoa); border-radius: 12px; min-width: 44px; min-height: 44px; font-size: 18px; }
+.linea { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding-block: 8px; border-bottom: 1px dashed var(--line); }
+.linea small { color: var(--cocoa-soft); }
+.totales { display: grid; gap: 4px; padding-top: 4px; }
+.totales div { display: flex; justify-content: space-between; gap: 10px; }
+.totales .grande { font-family: var(--font-display); font-weight: 800; font-size: 24px; }
+textarea { width: 100%; min-height: 64px; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--cream-2); color: var(--cocoa); font: inherit; resize: vertical; }
+.acciones { display: grid; gap: 8px; }
+.btn { display: flex; justify-content: center; align-items: center; min-height: 52px; border-radius: 16px; border: 0; font-weight: 800; font-size: 16px; text-decoration: none; }
+.btn-main { background: var(--cocoa); color: var(--cream-2); }
+.btn-alt { background: var(--cream); color: var(--cocoa); }
+.ok { color: #2F6B45; font-weight: 700; font-size: 14px; text-align: center; min-height: 20px; }
+.vacio { color: var(--cocoa-soft); text-align: center; padding: 20px 0; }
+
+/* Panel del dueño (demo) */
+.dueno { margin-top: 30px; border: 1px solid var(--line); border-radius: 18px; background: var(--white); box-shadow: var(--shadow); }
+.dueno summary { cursor: pointer; padding: 16px; font-weight: 800; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.dueno summary::-webkit-details-marker { display: none; }
+.dueno .body { padding: 0 16px 18px; display: grid; gap: 18px; }
+.panel-tabs { display: flex; gap: 6px; background: var(--cream-2); padding: 4px; border-radius: 12px; }
+.panel-tabs button { flex: 1; border: 0; background: transparent; color: var(--cocoa-soft); padding: 9px 6px; border-radius: 9px; font-weight: 800; font-size: 13.5px; min-height: 40px; }
+.panel-tabs button[aria-selected="true"] { background: var(--white); color: var(--cocoa); box-shadow: var(--shadow); }
+.campo { display: grid; gap: 6px; font-size: 14px; font-weight: 700; }
+.campo input, .campo select { min-height: 44px; border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; background: var(--cream-2); color: var(--cocoa); font: inherit; font-weight: 600; }
+.qr-box { display: grid; justify-items: center; gap: 6px; padding: 16px; border-radius: 16px; background: var(--white); border: 1px solid var(--line); text-align: center; }
+.qr-box #qr img, .qr-box #qr canvas { display: block; max-width: 100%; height: auto; }
+.qr-box strong { font-family: var(--font-display); font-size: 20px; }
+.nota { color: var(--cocoa-soft); font-size: 13px; margin: 0; }
+.demo-pill { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #B04A64; background: #FCE6EC; padding: 3px 8px; border-radius: 6px; }
+.edit-grupo h4 { margin: 4px 0 6px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--cocoa-soft); }
+.edit-row { display: grid; grid-template-columns: 1fr 96px auto; gap: 8px; align-items: center; padding-block: 6px; border-bottom: 1px dashed var(--line); }
+.edit-row span { font-weight: 700; font-size: 14px; min-width: 0; }
+.edit-row input[type="text"] { min-height: 40px; width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 0 10px; background: var(--cream-2); color: var(--cocoa); font: inherit; font-weight: 700; text-align: right; }
+.switch { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--cocoa-soft); white-space: nowrap; min-height: 40px; }
+.switch input { width: 18px; height: 18px; accent-color: var(--cocoa); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .add, .barra button { transition: transform .12s ease; }
+  .add:active:not(:disabled), .barra button:active { transform: scale(.97); }
+}
+</style>
+
+<style>[hidden]{display:none!important} html,body{margin:0} img{max-width:100%}</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="logo" aria-hidden="true">
+      <svg width="46" height="46" viewBox="0 0 48 48" fill="none">
+        <path d="M12 24c-3 0-5-2.4-5-5.2 0-3 2.4-5.3 5.4-5.1C13.7 9 18 6 23 6c5.6 0 10 3.6 10.9 8.5 3 .1 5.1 2.4 5.1 5.2 0 2.6-2 4.3-4.6 4.3H12z" fill="#E7849C"/>
+        <circle cx="24" cy="5" r="2.6" fill="#B04A64"/>
+        <path d="M11 26h26l-3.2 16.2a2.6 2.6 0 0 1-2.6 2.1H16.8a2.6 2.6 0 0 1-2.6-2.1L11 26z" fill="#4A2C22"/>
+        <path d="M18 27l1.6 16M24 27v16M30 27l-1.6 16" stroke="#7A5A4C" stroke-width="1.4"/>
+      </svg>
+    </div>
+    <h1>Cupcake <em>&amp;</em> Café</h1>
+    <p class="sub">Hecho en casa, todos los días</p>
+    <div class="chips">
+      <span class="mesa" id="mesaChip">Mesa 5</span>
+      <span class="tasa num">Tasa BCV <strong id="tasaTxt">Bs 877,90</strong></span>
+    </div>
+  </header>
+
+  <section aria-labelledby="t-ofertas">
+    <div class="section-title">
+      <h2 id="t-ofertas">Ofertas de hoy</h2>
+      <span class="hint">Desliza para ver más</span>
+    </div>
+    <div class="ofertas" id="ofertas"></div>
+  </section>
+
+  <nav class="tabs" id="tabs" aria-label="Categorías del menú"></nav>
+  <main id="menu"></main>
+
+  <details class="dueno" id="dueno">
+    <summary><span>Panel del dueño</span><span class="demo-pill">Demo</span></summary>
+    <div class="body">
+      <div class="panel-tabs" role="tablist" aria-label="Secciones del panel">
+        <button type="button" role="tab" aria-selected="true" data-panel="p-precios" id="tab-precios">Precios</button>
+        <button type="button" role="tab" aria-selected="false" data-panel="p-ofertas" id="tab-ofertas">Ofertas</button>
+        <button type="button" role="tab" aria-selected="false" data-panel="p-qr" id="tab-qr">QR y tasa</button>
+      </div>
+
+      <section id="p-precios" role="tabpanel" aria-labelledby="tab-precios">
+        <p class="nota" style="margin-bottom:8px">Cambia un precio o marca un producto como agotado: el menú se actualiza al instante para todas las mesas.</p>
+        <div id="editPrecios"></div>
+      </section>
+
+      <section id="p-ofertas" role="tabpanel" aria-labelledby="tab-ofertas" hidden>
+        <p class="nota" style="margin-bottom:8px">Activa o apaga cada oferta y ajusta su precio.</p>
+        <div id="editOfertas"></div>
+      </section>
+
+      <section id="p-qr" role="tabpanel" aria-labelledby="tab-qr" hidden>
+        <div style="display:grid;gap:14px">
+          <label class="campo" for="selMesa">Mesa
+            <select id="selMesa"></select>
+          </label>
+          <div class="qr-box">
+            <div id="qr" role="img" aria-label="Código QR de la mesa seleccionada"></div>
+            <strong id="qrTitulo">Mesa 5</strong>
+            <span style="font-size:12.5px;color:var(--cocoa-soft)">Escanea para ver el menú y pedir</span>
+          </div>
+          <label class="campo" for="inpTasa">Tasa BCV (Bs por $)
+            <input id="inpTasa" inputmode="decimal" value="877,90">
+          </label>
+          <p class="nota">En la versión real la tasa se actualiza sola cada mañana desde el BCV.</p>
+        </div>
+      </section>
+    </div>
+  </details>
+</div>
+
+<div class="barra" id="barra" hidden>
+  <button type="button" id="verPedido">
+    <span><span class="count num" id="barCount">0</span>Ver pedido</span>
+    <span class="num" id="barTotal">$ 0,00</span>
+  </button>
+</div>
+
+<div class="sheet-bg" id="sheetBg" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="t-pedido">
+    <div class="sheet-head">
+      <h2 id="t-pedido">Tu pedido · <span id="sheetMesa">Mesa 5</span></h2>
+      <button type="button" class="close" id="cerrar" aria-label="Cerrar">✕</button>
+    </div>
+    <div id="lineas"></div>
+    <div class="totales num" id="totales"></div>
+    <label class="campo" for="nota">Notas
+      <textarea id="nota" placeholder="Ej.: café sin azúcar, cupcake para llevar"></textarea>
+    </label>
+    <div class="acciones">
+      <a class="btn btn-main" id="btnWhats" href="#" target="_blank" rel="noopener">Enviar pedido por WhatsApp</a>
+      <button type="button" class="btn btn-alt" id="btnCopiar">Copiar pedido</button>
+      <div class="ok" id="okMsg" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function () {
+  // ---------- Productos de ejemplo (en la versión real los carga el dueño desde su panel) ----------
+  const CATEGORIAS = [
+    { id: "cupcakes", nombre: "Cupcakes", desc: "Horneados cada mañana.", platos: [
+      { id: "red", nombre: "Red velvet", desc: "Con frosting de queso crema.", usd: 2.50, top: true },
+      { id: "cho", nombre: "Triple chocolate", desc: "Bizcocho de cacao, ganache y chispas.", usd: 2.50 },
+      { id: "vai", nombre: "Vainilla y fresa", desc: "Relleno de mermelada de fresa.", usd: 2.20 },
+      { id: "dul", nombre: "Dulce de leche", desc: "Con un toque de sal marina.", usd: 2.80 },
+      { id: "caj", nombre: "Caja de 6 cupcakes", desc: "Surtidos a tu gusto.", usd: 13.00 }
+    ]},
+    { id: "cafe", nombre: "Café", desc: "Café venezolano de altura.", platos: [
+      { id: "esp", nombre: "Espresso", desc: "Corto e intenso.", usd: 1.50 },
+      { id: "mar", nombre: "Marrón", desc: "Espresso con leche.", usd: 2.00 },
+      { id: "cap", nombre: "Cappuccino", desc: "Con espuma y canela.", usd: 2.80, top: true },
+      { id: "moc", nombre: "Mocaccino", desc: "Café, chocolate y crema.", usd: 3.20 }
+    ]},
+    { id: "frias", nombre: "Bebidas frías", desc: "Para la tarde.", platos: [
+      { id: "fra", nombre: "Frappé de café", desc: "Con crema batida.", usd: 3.80 },
+      { id: "mal", nombre: "Merengada de chocolate", desc: "Leche, helado y cacao.", usd: 3.50 },
+      { id: "jug", nombre: "Jugo natural", desc: "Fresa, parchita o mango.", usd: 2.50 }
+    ]},
+    { id: "postres", nombre: "Tortas y postres", desc: "Por porción.", platos: [
+      { id: "tre", nombre: "Torta tres leches", desc: "Suave y bien húmeda.", usd: 3.50 },
+      { id: "que", nombre: "Quesillo", desc: "Receta de la casa.", usd: 3.00 },
+      { id: "bro", nombre: "Brownie con helado", desc: "Tibio, con helado de vainilla.", usd: 4.00 }
+    ]},
+    { id: "salados", nombre: "Salados", desc: "Para acompañar el café.", platos: [
+      { id: "cac", nombre: "Cachito de jamón", desc: "Recién horneado.", usd: 2.00 },
+      { id: "cro", nombre: "Croissant de jamón y queso", desc: "Tostado a la plancha.", usd: 3.50 },
+      { id: "teq", nombre: "Tequeños (6 und.)", desc: "Con salsa de la casa.", usd: 4.50 }
+    ]}
+  ];
+  const OFERTAS = [
+    { id: "o1", tag: "Combo del día", nombre: "Cupcake + cappuccino", desc: "Cualquier cupcake con tu cappuccino.", usd: 4.50, antes: 5.30, activa: true },
+    { id: "o2", tag: "Martes 2 × 1", nombre: "Cupcakes de vainilla y fresa", desc: "Llevas dos y pagas uno.", usd: 2.20, antes: 4.40, activa: true },
+    { id: "o3", tag: "Para compartir", nombre: "Caja de 6 + 2 marrones", desc: "Ideal para la oficina.", usd: 15.50, antes: 17.00, activa: true }
+  ];
+
+  // ---------- Estado ----------
+  let tasa = 877.90;
+  const pedido = {};
+  const todos = {};
+  CATEGORIAS.forEach(c => c.platos.forEach(p => { p.agotado = false; todos[p.id] = p; }));
+  OFERTAS.forEach(o => todos[o.id] = o);
+
+  function leerMesa() {
+    const q = new URLSearchParams(location.search).get("mesa");
+    const h = (location.hash.match(/mesa-(\d+)/) || [])[1];
+    return q || h || "5";
+  }
+  let mesa = leerMesa();
+
+  const fmt = new Intl.NumberFormat("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const usd = n => "$ " + fmt.format(n);
+  const bs = n => "Bs " + fmt.format(Math.round(n * tasa * 100) / 100);
+  const parse = t => parseFloat(String(t).replace(/\s|\$/g, "").replace(/\.(?=\d{3}(\D|$))/g, "").replace(",", "."));
+  const $ = id => document.getElementById(id);
+
+  // ---------- Menú del cliente ----------
+  function pintarOfertas() {
+    const activas = OFERTAS.filter(o => o.activa);
+    $("ofertas").innerHTML = activas.length === 0
+      ? `<p class="vacio" style="padding:8px 0">Hoy no hay ofertas activas.</p>`
+      : activas.map(o => `
+      <article class="oferta">
+        <span class="tag">${o.tag}</span>
+        <h3>${o.nombre}</h3>
+        <p>${o.desc}</p>
+        <div class="oferta-foot">
+          <div class="num">
+            <div class="antes">${usd(o.antes)}</div>
+            <div class="precio-grande">${usd(o.usd)}</div>
+            <div class="bs">${bs(o.usd)}</div>
+          </div>
+          <div data-ctrl="${o.id}"></div>
+        </div>
+      </article>`).join("");
+  }
+
+  function pintarMenu() {
+    const actual = document.querySelector('.tab[aria-current="true"]');
+    const actualId = actual ? actual.dataset.cat : CATEGORIAS[0].id;
+    $("tabs").innerHTML = CATEGORIAS.map(c =>
+      `<button type="button" class="tab" data-cat="${c.id}" aria-current="${c.id === actualId}">${c.nombre}</button>`).join("");
+    $("menu").innerHTML = CATEGORIAS.map(c => `
+      <section class="cat" id="cat-${c.id}" aria-labelledby="h-${c.id}">
+        <h2 id="h-${c.id}">${c.nombre}</h2>
+        <p class="cat-desc">${c.desc}</p>
+        <div>
+          ${c.platos.map(p => `
+            <article class="plato${p.agotado ? " agotado" : ""}">
+              <h3>${p.nombre}${p.top && !p.agotado ? '<span class="badge">Favorito</span>' : ""}</h3>
+              <p>${p.desc}</p>
+              <div class="precio num"><b>${usd(p.usd)}</b><span>${bs(p.usd)}</span></div>
+              <div class="ctrl" data-ctrl="${p.id}"></div>
+            </article>`).join("")}
+        </div>
+      </section>`).join("");
+  }
+
+  function pintarControles() {
+    document.querySelectorAll("[data-ctrl]").forEach(el => {
+      const id = el.dataset.ctrl, item = todos[id], n = pedido[id] || 0;
+      if (item.agotado) { el.innerHTML = `<button type="button" class="add" disabled>Agotado</button>`; return; }
+      el.innerHTML = n === 0
+        ? `<button type="button" class="add" data-add="${id}" aria-label="Agregar ${item.nombre}">Agregar</button>`
+        : `<div class="stepper" role="group" aria-label="Cantidad de ${item.nombre}">
+             <button type="button" data-menos="${id}" aria-label="Quitar uno">−</button>
+             <output class="num">${n}</output>
+             <button type="button" data-mas="${id}" aria-label="Agregar uno">+</button>
+           </div>`;
+    });
+  }
+
+  function totales() {
+    let cant = 0, total = 0;
+    Object.keys(pedido).forEach(id => { cant += pedido[id]; total += pedido[id] * todos[id].usd; });
+    return { cant, total };
+  }
+
+  function pintarBarra() {
+    const t = totales();
+    $("barra").hidden = t.cant === 0;
+    $("barCount").textContent = t.cant;
+    $("barTotal").textContent = usd(t.total);
+  }
+
+  function textoPedido() {
+    const t = totales();
+    const lineas = Object.keys(pedido).map(id => `${pedido[id]} x ${todos[id].nombre} — ${usd(pedido[id] * todos[id].usd)}`);
+    const nota = $("nota").value.trim();
+    return `Cupcake & Café · Pedido Mesa ${mesa}\n` + lineas.join("\n") +
+      `\n\nTotal: ${usd(t.total)} (${bs(t.total)})` + (nota ? `\nNota: ${nota}` : "");
+  }
+
+  function pintarHoja() {
+    const t = totales();
+    $("sheetMesa").textContent = "Mesa " + mesa;
+    const ids = Object.keys(pedido);
+    $("lineas").innerHTML = ids.length === 0
+      ? `<p class="vacio">Aún no has agregado nada.</p>`
+      : ids.map(id => `
+        <div class="linea">
+          <span>${pedido[id]} × ${todos[id].nombre}</span>
+          <b class="num">${usd(pedido[id] * todos[id].usd)}</b>
+          <small class="num">${usd(todos[id].usd)} c/u</small>
+          <small class="num" style="text-align:right">${bs(pedido[id] * todos[id].usd)}</small>
+        </div>`).join("");
+    $("totales").innerHTML = `
+      <div class="grande"><span>Total</span><span>${usd(t.total)}</span></div>
+      <div><span style="color:var(--cocoa-soft)">En bolívares (tasa ${fmt.format(tasa)})</span><span>${bs(t.total)}</span></div>`;
+    actualizarWhats();
+  }
+
+  function actualizarWhats() { $("btnWhats").href = "https://wa.me/?text=" + encodeURIComponent(textoPedido()); }
+
+  function pintarCliente() {
+    $("mesaChip").textContent = "Mesa " + mesa;
+    $("tasaTxt").textContent = "Bs " + fmt.format(tasa);
+    pintarOfertas(); pintarMenu(); pintarControles(); pintarBarra(); observar();
+    if (!$("sheetBg").hidden) pintarHoja();
+  }
+
+  // ---------- Panel del dueño ----------
+  function pintarPanel() {
+    $("editPrecios").innerHTML = CATEGORIAS.map(c => `
+      <div class="edit-grupo">
+        <h4>${c.nombre}</h4>
+        ${c.platos.map(p => `
+          <div class="edit-row">
+            <span>${p.nombre}</span>
+            <input type="text" inputmode="decimal" id="pr-${p.id}" data-precio="${p.id}" value="${fmt.format(p.usd)}" aria-label="Precio en dólares de ${p.nombre}">
+            <label class="switch" for="ag-${p.id}"><input type="checkbox" id="ag-${p.id}" data-agotado="${p.id}" ${p.agotado ? "checked" : ""}>Agotado</label>
+          </div>`).join("")}
+      </div>`).join("");
+    $("editOfertas").innerHTML = OFERTAS.map(o => `
+      <div class="edit-row">
+        <span>${o.nombre}<br><small style="font-weight:600;color:var(--cocoa-soft)">${o.tag}</small></span>
+        <input type="text" inputmode="decimal" id="of-${o.id}" data-precio="${o.id}" value="${fmt.format(o.usd)}" aria-label="Precio en dólares de ${o.nombre}">
+        <label class="switch" for="act-${o.id}"><input type="checkbox" id="act-${o.id}" data-activa="${o.id}" ${o.activa ? "checked" : ""}>Activa</label>
+      </div>`).join("");
+  }
+
+  document.addEventListener("change", e => {
+    const t = e.target;
+    if (t.dataset.precio) {
+      const v = parse(t.value);
+      if (v > 0) { todos[t.dataset.precio].usd = v; t.value = fmt.format(v); pintarCliente(); }
+      else t.value = fmt.format(todos[t.dataset.precio].usd);
+    } else if (t.dataset.agotado) {
+      todos[t.dataset.agotado].agotado = t.checked;
+      if (t.checked) delete pedido[t.dataset.agotado];
+      pintarCliente();
+    } else if (t.dataset.activa) {
+      todos[t.dataset.activa].activa = t.checked;
+      if (!t.checked) delete pedido[t.dataset.activa];
+      pintarCliente();
+    }
+  });
+
+  // ---------- Eventos del menú ----------
+  document.addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.panel) {
+      document.querySelectorAll(".panel-tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
+      ["p-precios", "p-ofertas", "p-qr"].forEach(id => $(id).hidden = id !== b.dataset.panel);
+      if (b.dataset.panel === "p-qr") pintarQR();
+      return;
+    }
+    if (b.dataset.add) pedido[b.dataset.add] = 1;
+    else if (b.dataset.mas) pedido[b.dataset.mas]++;
+    else if (b.dataset.menos) { if (--pedido[b.dataset.menos] <= 0) delete pedido[b.dataset.menos]; }
+    else if (b.dataset.cat) {
+      document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-current", t === b));
+      $("cat-" + b.dataset.cat).scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      return;
+    } else return;
+    pintarControles(); pintarBarra();
+    if (!$("sheetBg").hidden) pintarHoja();
+  });
+
+  $("verPedido").addEventListener("click", () => { pintarHoja(); $("sheetBg").hidden = false; $("cerrar").focus(); });
+  $("cerrar").addEventListener("click", () => { $("sheetBg").hidden = true; $("okMsg").textContent = ""; });
+  $("sheetBg").addEventListener("click", e => { if (e.target === $("sheetBg")) $("cerrar").click(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("sheetBg").hidden) $("cerrar").click(); });
+  $("nota").addEventListener("input", actualizarWhats);
+
+  $("btnCopiar").addEventListener("click", () => {
+    const txt = textoPedido();
+    const fallback = () => { $("nota").value = txt; $("nota").select(); $("okMsg").textContent = "Selecciona y copia el texto del pedido."; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(() => $("okMsg").textContent = "Pedido copiado.").catch(fallback);
+    } else fallback();
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      const id = en.target.id.replace("cat-", "");
+      document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-current", t.dataset.cat === id));
+    });
+  }, { rootMargin: "-40% 0px -55% 0px" });
+  function observar() { obs.disconnect(); document.querySelectorAll(".cat").forEach(s => obs.observe(s)); }
+
+  // QR por mesa
+  const sel = $("selMesa");
+  for (let i = 1; i <= 12; i++) sel.insertAdjacentHTML("beforeend", `<option value="${i}">Mesa ${i}</option>`);
+  sel.value = mesa;
+  function pintarQR() {
+    const base = location.href.split("#")[0].split("?")[0];
+    const url = base + "?mesa=" + sel.value;
+    $("qrTitulo").textContent = "Mesa " + sel.value;
+    $("qr").innerHTML = "";
+    if (window.QRCode) new QRCode($("qr"), { text: url, width: 180, height: 180, colorDark: "#4A2C22", colorLight: "#FFFFFF", correctLevel: QRCode.CorrectLevel.M });
+    else $("qr").textContent = url;
+  }
+  sel.addEventListener("change", () => { mesa = sel.value; pintarCliente(); pintarQR(); });
+
+  $("inpTasa").addEventListener("input", e => {
+    const v = parse(e.target.value);
+    if (v > 0) { tasa = v; pintarCliente(); }
+  });
+
+  pintarCliente(); pintarPanel(); pintarQR();
+})();
+</script>
+
+</body>
+</html>
